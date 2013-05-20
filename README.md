@@ -16,3 +16,5 @@ Format of asset transfers:
 * `sender's signature` - sender's bitcoin signature of `{datetime} SEND {amount} OF {asset} TO {recepient}` string; if `sender` = `asset`, then this transfer is share creation.
 
 Demo: http://arsenische.github.io/offchain/index.html
+
+Thanks: brainwallet.org, http://twitter.github.io/bootstrap/, http://jquery.com/, github
