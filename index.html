@@ -1,10 +1,12 @@
 <html>
-<head>
-  <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
+<head>  
   <script src="jquery/jquery-1.9.1.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
   <script src="brainwallet/bitcoinjs-min.js"></script>
   <script src="brainwallet/bitcoinsig.js"></script>
   <script src="transfers.js"></script>
+  <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
+
   <script>
     var percentage = 0;
     var rows;
@@ -59,20 +61,86 @@
       $("#progress_bar").width(percentage+"%");
     }
 
+    function update_transfer_info()
+    {
+      var t = new Date();
+
+      var amount = $("#amount").val();
+      var to = $("#recepient").val();
+      var asset = $("#asset").val();
+
+      if ((amount > 0) && to && asset )
+      {
+        $("#please_sign").toggle(true);
+        $("#signature").val("");
+        $("#transfer_info").text(t.toISOString()+" SEND "+amount+" OF "+asset+" TO "+to);
+        $("#create_transfer_button").toggle(true);
+      }
+      $("#created_transfer").html("");
+    }
+
+    function show_created_transfer()
+    {
+      var signature = $("#signature").val();
+      var transfer = $("#transfer_info").val()+" "+signature;
+
+      var parsed = parse_transfer(transfer);
+
+      if (parsed && parsed.from) {
+        $("#created_transfer").html("Here is the created transfer: <textarea readonly='true' class='input-block-level'>"+transfer+"</textarea>Please check that the sender's address is <code>"+parsed.from+"</code> and send this transfer request to the asset issuer so that s/he could add it to the list of transfers.");
+        $("#create_transfer_button").toggle("false");
+      }
+      else
+        alert("Sorry, something went wrong. Please check the input data.");
+    }
+
   </script>
 </head>
 <body>
 <h1>Offchain data tools</h1>
 <p>Offchain.info provides simple tools to track ownership of bitcoin assets</p>
-<form>
-  <fieldset>
-    <legend>Validate transfer history and generate list of current owners</legend>
-    <textarea id='transfers' class='input-block-level' placeholder='Paste transfer history here' rows="5"></textarea>
-    <div class="btn btn-primary" onclick="validate_generate()">Validate & Generate</div>
-  </fieldset>
-</form>
-<div class='progress progress-striped active'><div class='bar' style='width: 0%;  -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none; transition: none;' id='progress_bar'></div></div>
-<div id="asset_info">
+
+
+<ul class="nav nav-tabs" id="myTab">
+  <li class="active"><a href="#create" data-toggle="tab">Create transfer</a></li>
+  <li><a href="#generate" data-toggle="tab">Process list of transfers</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="create">
+    <form>
+      <fieldset>
+        <legend>Create a request to send shares to bitcoin address</legend>
+        <label>Asset:</label>
+        <input id='asset' placeholder='bitcoin address' onchange="update_transfer_info()"/>
+        <label>Amount:</label>
+        <input id='amount' placeholder='integer > 0' onchange="update_transfer_info()"/>
+        <label>Recepient:</label>
+        <input id='recepient' placeholder='bitcoin address' onchange="update_transfer_info()"/><i>Transfers to asset address destroy shares.</i>
+
+        <div id="please_sign" style='display:none'>Please sign it with sender's bitcoin address (or with asset's bitcoin address to create new shares):
+          <textarea id="transfer_info" readonly='true' class='input-block-level' ></textarea>
+          <label>and paste the signature here:</label>
+          <input id='signature' placeholder="sender's signature"/>
+        </div>
+        <div id="created_transfer"></div>
+      </fieldset>
+      <div id="create_transfer_button" class="btn btn-primary" onclick="show_created_transfer()">Create transfer</div>
+
+    </form>
+  </div>
+  <div class="tab-pane" id="generate">
+    <form>
+      <fieldset>
+        <legend>Validate transfer history and generate list of current owners</legend>
+        <textarea id='transfers' class='input-block-level' placeholder='Paste transfer history here' rows="5"></textarea>
+        <div class="btn btn-primary" onclick="validate_generate()">Validate & Generate</div>
+      </fieldset>
+    </form>
+    <div class='progress progress-striped active'><div class='bar' style='width: 0%;  -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none; transition: none;' id='progress_bar'></div></div>
+    <div id="asset_info">
+    </div>    
+  </div>
 </div>
 </body>
 </html>
