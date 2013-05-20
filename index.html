@@ -1,0 +1,78 @@
+<html>
+<head>
+  <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
+  <script src="jquery/jquery-1.9.1.min.js"></script>
+  <script src="brainwallet/bitcoinjs-min.js"></script>
+  <script src="brainwallet/bitcoinsig.js"></script>
+  <script src="transfers.js"></script>
+  <script>
+    var percentage = 0;
+    var rows;
+    var n = 10; // number of rows to validate
+    var row_i;
+
+    function validate_generate()
+    {
+      rows = $('#transfers').val().split(/\n/);
+
+      asset_info = {asset:false,owners:{},transfers:[]};
+      row_i = 0;
+      validate_n_rows();
+    }
+
+    function validate_n_rows()
+    {
+      var max_i = Math.min(rows.length, row_i + n);
+
+      show_progress(100.0*row_i/(rows.length));
+      if (row_i < max_i)
+      {
+        asset_info.transfers = rows.slice(row_i, max_i);
+        asset_info = validate_transfers(asset_info);
+        if (!asset_info.error)
+        {
+          setTimeout(validate_n_rows, 1);
+          row_i = max_i;
+        }
+        else
+          show_asset_info(asset_info);
+      }
+      else
+        show_asset_info(asset_info);
+    }
+
+    function show_asset_info(asset_info)
+    {
+      $("#asset_info").html("<h2>ASSET: "+asset_info.asset+"</h2>");
+      for(var key in asset_info.owners)
+        if(asset_info.owners.hasOwnProperty(key))
+          $("#asset_info").append("<div>"+key+" OWNS "+asset_info.owners[key]+"</div>");
+
+      if (asset_info.error != undefined)
+        $("#asset_info").append("<div class='alert alert-error'>"+asset_info.error+"</div>");
+    }
+
+    function show_progress(percentage)
+    {
+      if (percentage < 1) percentage = 1;
+      if (percentage >= 100) percentage = 0;
+      $("#progress_bar").width(percentage+"%");
+    }
+
+  </script>
+</head>
+<body>
+<h1>Offchain data tools</h1>
+<p>Offchain.info provides simple tools to track ownership of bitcoin assets</p>
+<form>
+  <fieldset>
+    <legend>Validate transfer history and generate list of current owners</legend>
+    <textarea id='transfers' class='input-block-level' placeholder='Paste transfer history here' rows="5"></textarea>
+    <div class="btn btn-primary" onclick="validate_generate()">Validate & Generate</div>
+  </fieldset>
+</form>
+<div class='progress progress-striped active'><div class='bar' style='width: 0%;  -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none; transition: none;' id='progress_bar'></div></div>
+<div id="asset_info">
+</div>
+</body>
+</html>
