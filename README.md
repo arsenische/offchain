@@ -14,3 +14,5 @@ Format of asset transfers:
 * `asset` - bitcoin address that identifies asset
 * `recepient` - bitcoin address of asset recepient; if `recepient` = `asset`, then this transfer is share destruction.
 * `sender's signature` - sender's bitcoin signature of `{datetime} SEND {amount} OF {asset} TO {recepient}` string; if `sender` = `asset`, then this transfer is share creation.
+
+Demo: http://arsenische.github.io/offchain/index.html
