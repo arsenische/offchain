@@ -66,7 +66,7 @@
       var t = new Date();
 
       var amount = $("#amount").val();
-      var to = $("#recepient").val();
+      var to = $("#recipient").val();
       var asset = $("#asset").val();
 
       if ((amount > 0) && to && asset )
@@ -115,8 +115,8 @@
         <input id='asset' placeholder='bitcoin address' onchange="update_transfer_info()"/>
         <label>Amount:</label>
         <input id='amount' placeholder='integer > 0' onchange="update_transfer_info()"/>
-        <label>Recepient:</label>
-        <input id='recepient' placeholder='bitcoin address' onchange="update_transfer_info()"/><i>Transfers to asset address destroy shares.</i>
+        <label>recipient:</label>
+        <input id='recipient' placeholder='bitcoin address' onchange="update_transfer_info()"/><i>Transfers to asset address destroy shares.</i>
 
         <div id="please_sign" style='display:none'>Please sign it with sender's bitcoin address (or with asset's bitcoin address to create new shares):
           <textarea id="transfer_info" readonly='true' class='input-block-level' ></textarea>

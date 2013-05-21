@@ -48,7 +48,7 @@ function validate_transfers(asset_info)
 
 function parse_transfer(transfer)
 {
-  // <ISO datetime> SEND <amount> OF <asset> TO <recepient> <sender's signature>
+  // <ISO datetime> SEND <amount> OF <asset> TO <recipient> <sender's signature>
   parts = transfer.split(/ /);
   if (parts.length == 8)
   {
