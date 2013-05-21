@@ -34,4 +34,4 @@ If you process this data, you will get the following results:
 
 Demo: http://arsenische.github.io/offchain/index.html
 
-Thanks: brainwallet.org, http://twitter.github.io/bootstrap/, http://jquery.com/, github
+Thanks: http://brainwallet.org/, http://twitter.github.io/bootstrap/, http://jquery.com/, https://github.com/
